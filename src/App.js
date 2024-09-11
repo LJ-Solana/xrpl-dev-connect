@@ -1,42 +1,64 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { supabase } from './supabaseClient';
+import AuthLayout from './auth/AuthLayout';
+import LoginPage from './auth/LoginPage';
+import SignUpPage from './auth/SignupPage';
+import MainLayout from './components/MainLayout';
 import HomePage from './components/HomePage';
 import RegisterPage from './components/RegisterPage';
 import ExplorePage from './components/ExplorePage';
+import DeveloperProfilePage from './components/DeveloperProfilePage';
 
-const App = () => (
-  <Router>
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/" className="flex-shrink-0 flex items-center">
-                XRPL Dev Connect
-              </Link>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link to="/" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                  Home
-                </Link>
-                <Link to="/explore" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                  Explore
-                </Link>
-                <Link to="/register" className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                  Register
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+const App = () => {
+  const [session, setSession] = useState(null);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  return (
+    <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/explore" element={<ExplorePage />} />
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignUpPage />} />
+        </Route>
+        
+        <Route
+          path="/*"
+          element={
+            session ? (
+              <MainLayout onLogout={logout}>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/explore" element={<ExplorePage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/developer/:id" element={<DeveloperProfilePage />} />
+                </Routes>
+              </MainLayout>
+            ) : (
+              <Navigate to="/auth/login" replace />
+            )
+          }
+        />
       </Routes>
-    </div>
-  </Router>
-);
+    </Router>
+  );
+};
 
 export default App;
