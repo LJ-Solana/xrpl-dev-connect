@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient';
 import AuthLayout from './auth/AuthLayout';
 import LoginPage from './auth/LoginPage';
 import SignUpPage from './auth/SignupPage';
+import ConfirmEmail from './auth/ConfirmEmail'; 
 import MainLayout from './components/MainLayout';
 import HomePage from './components/HomePage';
 import RegisterPage from './components/RegisterPage';
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="signup" element={<SignUpPage />} />
+          <Route path="confirm" element={<ConfirmEmail />} /> 
         </Route>
         
         <Route

@@ -2,21 +2,36 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
-const SignUpPage = ({ onSignUp }) => {
+const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
     try {
-      const { user, error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
       if (error) throw error;
-      onSignUp();
-      navigate('/');
+
+      if (data?.user) {
+        alert('Sign up successful! Please check your email to confirm your account.');
+        navigate('/auth/login');
+      } else {
+        throw new Error('An unexpected error occurred');
+      }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,6 +47,7 @@ const SignUpPage = ({ onSignUp }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-gray-700 text-green-400 border border-green-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
           />
           <input
             type="password"
@@ -39,12 +55,14 @@ const SignUpPage = ({ onSignUp }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-gray-700 text-green-400 border border-green-500 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
           />
           <button
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white font-mono py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
         <p className="mt-4 text-green-400 font-mono">

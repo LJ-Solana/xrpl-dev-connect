@@ -6,7 +6,7 @@ const MainLayout = ({ children, onLogout }) => {
     <div className="min-h-screen bg-black flex flex-col">
       <nav className="bg-gray-900 border-b border-green-500 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between h-16">
+          <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link to="/" className="flex-shrink-0 flex items-center text-green-500 text-xl font-mono font-bold">
                 &lt;XRPL_Dev_Connect/&gt;
@@ -18,14 +18,11 @@ const MainLayout = ({ children, onLogout }) => {
                 <Link to="/explore" className="text-green-400 hover:bg-gray-800 hover:text-green-300 px-3 py-2 rounded-md text-sm font-mono">
                   &gt; Explore
                 </Link>
-                <Link to="/register" className="text-green-400 hover:bg-gray-800 hover:text-green-300 px-3 py-2 rounded-md text-sm font-mono">
-                  &gt; Register
-                </Link>
-                <button onClick={onLogout} className="text-green-400 hover:bg-gray-800 hover:text-green-300 px-3 py-2 rounded-md text-sm font-mono">
-                  &gt; Logout
-                </button>
               </div>
             </div>
+            <button onClick={onLogout} className="text-green-400 hover:bg-gray-800 hover:text-green-300 px-3 py-2 rounded-md text-sm font-mono">
+              &gt; Logout
+            </button>
           </div>
         </div>
       </nav>
