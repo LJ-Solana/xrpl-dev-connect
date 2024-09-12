@@ -55,7 +55,6 @@ We welcome contributions from the community! Here's how you can contribute:
 This project is open source and available under the [MIT License](LICENSE).
 
 ## Acknowledgements
-- XRPL Foundation for their support and resources
-- All contributors who have helped shape this project
+- All contributors who will help to shape this project
 
 Join us in building a stronger XRPL developer community!
