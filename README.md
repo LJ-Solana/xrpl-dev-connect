@@ -41,7 +41,6 @@ XRPL Dev Connect is an open-source platform designed to connect XRPL (XRP Ledger
 - React
 - React Router
 - Supabase for authentication and database
-- [Add any other major technologies used]
 
 ## Contributing
 We welcome contributions from the community! Here's how you can contribute:
